@@ -6,10 +6,10 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<!-- Lägg till Chart.js -->
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Tabell för att visa temperaturdata -->
+
 <table class="table">
     <thead>
         <tr>
@@ -28,19 +28,8 @@
     </tbody>
 </table>
 
-<!-- Val för antal tidpunkter och uppdateringsknapp -->
-<label for="numPoints">Välj antal tidpunkter:</label>
-<select id="numPoints">
-    <option value="5">5</option>
-    <option value="10" selected>10</option>
-    <option value="20">20</option>
-    <option value="Alla">Alla</option>
-</select>
-
-<button id="updateChartButton">Uppdatera graf</button>
 
 
-<!-- Canvas för grafen -->
 <canvas id="temperatureChart" width="800" height="400"></canvas>
 
 <script>
@@ -85,13 +74,13 @@
             filteredLabels = allLabels.slice(Math.max(allLabels.length - numPoints, 0));
         }
 
-        // Rensa befintliga data
+  
         temperatureChart.data.labels = [];
         temperatureChart.data.datasets.forEach((dataset) => {
             dataset.data = [];
         });
 
-        // Lägg till den filtrerade datan
+
         temperatureChart.data.labels = filteredLabels;
         temperatureChart.data.datasets.forEach((dataset) => {
             dataset.data = filteredData;
@@ -100,6 +89,6 @@
         temperatureChart.update();
     }
 
-    // Uppdatera grafen direkt när sidan laddas
+ 
     updateChart();
 </script>

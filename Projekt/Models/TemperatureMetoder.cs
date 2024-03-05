@@ -53,5 +53,40 @@ namespace Projekt.Models
                 }
             }
         }
+        public TemperatureDetaljer GetLatestTemperature(out string errorMessage)
+        {
+            TemperatureDetaljer latestTemperature = null;
+            errorMessage = "";
+
+            try
+            {
+                using (SqlConnection dbConnection = new SqlConnection(connectionString))
+                {
+                    string sqlString = "SELECT TOP 1 * FROM Temp ORDER BY MeasurementTime DESC";
+                    SqlCommand dbCommand = new SqlCommand(sqlString, dbConnection);
+
+                    dbConnection.Open();
+                    using (SqlDataReader reader = dbCommand.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            latestTemperature = new TemperatureDetaljer
+                            {
+                                TempID = Convert.ToInt32(reader["TempID"]),
+                                Temperature = Convert.ToSingle(reader["Temperature"]),
+                                MeasurementTime = reader["MeasurementTime"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(reader["MeasurementTime"])
+                            };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+            }
+
+            return latestTemperature;
+        }
+
     }
 }

@@ -15,7 +15,11 @@ namespace Projekt.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            TemperatureMetoder tm = new TemperatureMetoder();
+            string error = "";
+            TemperatureDetaljer latestTemperature = tm.GetLatestTemperature(out error);
+            ViewBag.Error = error;
+            return View(latestTemperature);
         }
 
         public IActionResult Privacy()
