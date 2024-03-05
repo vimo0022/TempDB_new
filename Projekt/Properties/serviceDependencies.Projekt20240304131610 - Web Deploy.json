@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/Projekt20240304131610/providers/Microsoft.ServiceLinker/linkers/ConnectionStringstempdb_2998189DF6",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/temperaturdb/databases/temperaturDB",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:tempdb"
+    }
+  }
+}

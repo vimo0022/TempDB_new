@@ -1,0 +1,1 @@
+﻿INSERT INTO Temp (Temperature) VALUES (23.5);

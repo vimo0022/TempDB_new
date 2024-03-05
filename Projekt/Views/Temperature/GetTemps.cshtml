@@ -1,0 +1,105 @@
+﻿@model IEnumerable<Projekt.Models.TemperatureDetaljer>
+
+@{
+    ViewData["Title"] = "Temperaturer";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<!-- Lägg till Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Tabell för att visa temperaturdata -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>Temperatur</th>
+            <th>Tidpunkt</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Temperature)</td>
+                <td>@Html.DisplayFor(modelItem => item.MeasurementTime)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Val för antal tidpunkter och uppdateringsknapp -->
+<label for="numPoints">Välj antal tidpunkter:</label>
+<select id="numPoints">
+    <option value="5">5</option>
+    <option value="10" selected>10</option>
+    <option value="20">20</option>
+    <option value="Alla">Alla</option>
+</select>
+
+<button id="updateChartButton">Uppdatera graf</button>
+
+
+<!-- Canvas för grafen -->
+<canvas id="temperatureChart" width="800" height="400"></canvas>
+
+<script>
+    var allTempData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(x => x.Temperature)));
+    var allLabels = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Select(x => x.MeasurementTime.ToString("yyyy-MM-dd HH:mm"))));
+
+    var ctx = document.getElementById('temperatureChart').getContext('2d');
+    var temperatureChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: allLabels,
+            datasets: [{
+                label: 'Temperatur över tid',
+                data: allTempData,
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
+            }
+        }
+    });
+
+    document.getElementById('updateChartButton').addEventListener('click', updateChart);
+
+
+    function updateChart() {
+        var selectedNum = document.getElementById('numPoints').value;
+        var filteredData, filteredLabels;
+
+        if (selectedNum === "Alla") {
+            filteredData = allTempData;
+            filteredLabels = allLabels;
+        } else {
+            var numPoints = parseInt(selectedNum);
+            filteredData = allTempData.slice(Math.max(allTempData.length - numPoints, 0));
+            filteredLabels = allLabels.slice(Math.max(allLabels.length - numPoints, 0));
+        }
+
+        // Rensa befintliga data
+        temperatureChart.data.labels = [];
+        temperatureChart.data.datasets.forEach((dataset) => {
+            dataset.data = [];
+        });
+
+        // Lägg till den filtrerade datan
+        temperatureChart.data.labels = filteredLabels;
+        temperatureChart.data.datasets.forEach((dataset) => {
+            dataset.data = filteredData;
+        });
+
+        temperatureChart.update();
+    }
+
+    // Uppdatera grafen direkt när sidan laddas
+    updateChart();
+</script>
