@@ -26,12 +26,10 @@ namespace Projekt.Controllers
                         dbCommand.ExecuteNonQuery();
                     }
                 }
-                return Ok(); // Successfully inserted the data
+                return Ok();
             }
             catch (Exception ex)
             {
-                // Log the error message here instead of returning it
-                // Consider using a logging framework
                 return StatusCode(500, "Internal Server Error: Could not insert temperature data");
             }
         }
